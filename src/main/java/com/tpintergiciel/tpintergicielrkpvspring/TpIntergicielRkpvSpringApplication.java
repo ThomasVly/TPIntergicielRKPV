@@ -1,7 +1,9 @@
 package com.tpintergiciel.tpintergicielrkpvspring;
 
 import com.tpintergiciel.tpintergicielrkpvspring.classes.Client;
+import com.tpintergiciel.tpintergicielrkpvspring.classes.Msg;
 import com.tpintergiciel.tpintergicielrkpvspring.controller.ClientController;
+import com.tpintergiciel.tpintergicielrkpvspring.controller.MsgController;
 import com.tpintergiciel.tpintergicielrkpvspring.kafka.KafkaProducer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -20,8 +22,16 @@ public class TpIntergicielRkpvSpringApplication {
 	}
 	Client client = new Client("David");
 	Client client2 = new Client("Manuel");
+
+	Msg msg1 = new Msg(1,"David","Manuel", "ping");
+
+	Msg msg2 = new Msg(2,"Manuel","David", "pong");
+
 	@Autowired
 	private ClientController clientController;
+
+	@Autowired
+	private MsgController msgController;
 	@Bean
 	CommandLineRunner sendKafkaMessage(ApplicationContext context) {
 		return args -> {
@@ -34,7 +44,9 @@ public class TpIntergicielRkpvSpringApplication {
 			System.out.println(clientController.getAllClients().get(0).getNom());
 			System.out.println("yousk2");
 
+			msgController.createMsg(msg1);
 
+			msgController.createMsg(msg2);
 
 		};
 	}

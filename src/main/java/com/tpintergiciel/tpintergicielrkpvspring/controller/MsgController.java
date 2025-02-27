@@ -1,7 +1,9 @@
 package com.tpintergiciel.tpintergicielrkpvspring.controller;
 
 import com.tpintergiciel.tpintergicielrkpvspring.classes.Client;
+import com.tpintergiciel.tpintergicielrkpvspring.classes.Msg;
 import com.tpintergiciel.tpintergicielrkpvspring.services.ClientService;
+import com.tpintergiciel.tpintergicielrkpvspring.services.MsgService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -9,21 +11,20 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/clients")
-public class ClientController {
+@RequestMapping("/msg")
+public class MsgController {
     @Autowired
-    private ClientService clientService;
+    private MsgService msgService;
 
-    // Create a new user
     @PostMapping("/create")
-    public Client createClient(@RequestBody Client client) {
-        return clientService.createClient(client);
+    public Msg createMsg(@RequestBody Msg msg) {
+        return msgService.createMsg(msg);
     }
 
     // Get all users
     @GetMapping("/get")
-    public List<Client> getAllClients() {
-        return clientService.getAllClients();
+    public List<Msg> getAllMsg() {
+        return msgService.getAllMsg();
     }
 
     // Get user by ID
