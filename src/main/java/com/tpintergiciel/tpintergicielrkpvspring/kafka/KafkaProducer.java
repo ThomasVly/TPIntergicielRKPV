@@ -1,4 +1,4 @@
-package com.tpintergiciel.tpintergicielrkpvspring;
+package com.tpintergiciel.tpintergicielrkpvspring.kafka;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
