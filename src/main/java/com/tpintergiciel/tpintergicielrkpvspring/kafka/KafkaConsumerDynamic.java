@@ -1,4 +1,5 @@
-package com.tpintergiciel.tpintergicielrkpvspring;
+package com.tpintergiciel.tpintergicielrkpvspring.kafka;
+import com.tpintergiciel.tpintergicielrkpvspring.classes.Client;
 import org.springframework.kafka.listener.ConcurrentMessageListenerContainer;
 import org.springframework.kafka.listener.MessageListener;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
