@@ -1,9 +1,12 @@
-package com.tpintergiciel.tpintergicielrkpvspring;
+/*package com.tpintergiciel.tpintergicielrkpvspring;
 
+import com.tpintergiciel.tpintergicielrkpvspring.classes.Client;
+import com.tpintergiciel.tpintergicielrkpvspring.kafka.KafkaConsumer;
+import com.tpintergiciel.tpintergicielrkpvspring.kafka.KafkaConsumerDynamic;
+import com.tpintergiciel.tpintergicielrkpvspring.kafka.KafkaProducer;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import com.tpintergiciel.tpintergicielrkpvspring.*;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 
@@ -27,3 +30,4 @@ public class TpIntergicielRkpvSpringApplication {
 	}
 
 }
+*/

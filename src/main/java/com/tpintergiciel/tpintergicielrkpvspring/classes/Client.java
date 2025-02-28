@@ -1,5 +1,7 @@
 package com.tpintergiciel.tpintergicielrkpvspring.classes;
 
+import com.tpintergiciel.tpintergicielrkpvspring.kafka.KafkaConsumer;
+import com.tpintergiciel.tpintergicielrkpvspring.kafka.KafkaConsumerDynamic;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
