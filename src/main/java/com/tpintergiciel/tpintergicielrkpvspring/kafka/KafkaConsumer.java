@@ -1,4 +1,4 @@
-package com.tpintergiciel.tpintergicielrkpvspring;
+package com.tpintergiciel.tpintergicielrkpvspring.kafka;
 
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
