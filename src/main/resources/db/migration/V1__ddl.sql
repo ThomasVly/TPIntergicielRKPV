@@ -1,6 +1,7 @@
 CREATE TABLE client
 (
-    nom text
+    nom text,
+    isLogged boolean default false
 );
 
 CREATE TABLE msg
