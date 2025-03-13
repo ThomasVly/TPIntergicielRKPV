@@ -1,5 +1,6 @@
 package com.tpintergiciel.tpintergicielrkpvspring.controller;
 
+import com.tpintergiciel.tpintergicielrkpvspring.config.WebConfig;
 import com.tpintergiciel.tpintergicielrkpvspring.classes.Client;
 import com.tpintergiciel.tpintergicielrkpvspring.services.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
