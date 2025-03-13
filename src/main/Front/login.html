@@ -77,12 +77,8 @@
     <h2>Authentification</h2>
     <form id="login-form">
         <div class="form-group">
-            <label for="email">Adresse mail</label>
-            <input type="email" id="email" placeholder="Entrez votre adresse mail" required>
-        </div>
-        <div class="form-group">
-            <label for="password">Mot de passe</label>
-            <input type="password" id="password" placeholder="Entrez votre mot de passe" required>
+            <label for="username">Nom d'utilisateur</label>
+            <input type="text" id="username" placeholder="Entrez votre nom d'utilisateur" required>
         </div>
         <button type="submit" class="btn">Connexion</button>
     </form>
@@ -94,19 +90,34 @@
     document.getElementById("login-form").addEventListener("submit", function (e) {
         e.preventDefault();  // Empêche le rechargement de la page
 
-        const email = document.getElementById("email").value.trim();
-        const password = document.getElementById("password").value.trim();
+        const username = document.getElementById("username").value.trim();
 
-        // Récupération de tous les membres depuis l'API
-        fetch("http://localhost:8081/clients/get")
+        fetch("http://localhost:8081/clients/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                username: username,
+            })
+        })
             .then(response => {
                 if (!response.ok) {
                     throw new Error("Erreur réseau");
                 }
-                return response.json();
+                return response.json()
             })
-
+            .then(isAuthenticated =>{
+                if(isAuthenticated){
+                    console.log("Connexion réussie")
+                }
+                else{
+                    console.log("connexion failed")
+                }
+            })
+            .catch(error => console.error("Erreur :", error));
     });
+
 </script>
 
 </body>

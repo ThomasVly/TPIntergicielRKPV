@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -25,6 +26,16 @@ public class ClientController {
     @GetMapping("/get")
     public List<Client> getAllClients() {
         return clientService.getAllClients();
+    }
+    @PostMapping("/login")
+    public boolean login(@RequestBody Map<String, String> payload) {
+        String username = payload.get("username");
+        System.out.println(clientService.loginClient(username));
+        return clientService.loginClient(username);
+    }
+    @PostMapping("/connected")
+    public List<Client> getConnectedClient() {
+        return clientService.getAllConnectedClients();
     }
 
     // Get user by ID

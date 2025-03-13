@@ -36,7 +36,7 @@ public class MainApplication {
     CommandLineRunner sendKafkaMessage(ApplicationContext context) {
         return args -> {
             KafkaProducer producer = context.getBean(KafkaProducer.class);
-            producer.writeMessage("Hello Kafka from local!");
+            producer.writeMessage("Hello Kafka from local!","my_topic");
             System.out.println("Message envoyé directement à Kafka !");
 
             clientController.createClient(client);

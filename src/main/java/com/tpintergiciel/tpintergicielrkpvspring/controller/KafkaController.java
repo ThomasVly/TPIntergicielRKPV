@@ -1,5 +1,6 @@
-package com.tpintergiciel.tpintergicielrkpvspring.kafka;
+package com.tpintergiciel.tpintergicielrkpvspring.controller;
 
+import com.tpintergiciel.tpintergicielrkpvspring.kafka.KafkaProducer;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -14,8 +15,8 @@ public class KafkaController {
     }
 
     @PostMapping("/publish")
-    public void writeMessageToTopic(@RequestParam("message") String message){
-        this.producer.writeMessage(message);
+    public void writeMessageToTopic(@RequestParam("message") String message,String topic){
+        this.producer.writeMessage(message,topic);
 
     }
 

@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.tpintergiciel.tpintergicielrkpvspring.config.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -24,5 +26,34 @@ public class ClientService {
         return clientRepository.findAll();
     }
 
+    public boolean loginClient(String username) {
+        System.out.println("ALLOOO");
+        for (Client client : getAllClients()) {
+            System.out.println(client.getNom());
+            System.out.println(username);
+        if (Objects.equals(username, client.getNom())){
+            client.setLogged(true);
+            return true;
+        }
+        }
+        return false;
+    }
+    public void logoutClient(String username) {
+       for (Client client : getAllClients()) {
+           if (Objects.equals(username, client.getNom())){
+               client.setLogged(false);
+           }
+       }
+    }
+    public List<Client> getAllConnectedClients(){
+        List<Client> clients = getAllClients();
+        List<Client> connectedClients = new ArrayList<>();
+        for (Client client : clients) {
+            if(client.isLogged()){
+                connectedClients.add(client);
+            }
+        }
+        return connectedClients;
+    }
 
 }
