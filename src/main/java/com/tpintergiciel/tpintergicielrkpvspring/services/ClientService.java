@@ -4,6 +4,7 @@ import com.tpintergiciel.tpintergicielrkpvspring.classes.Client;
 import com.tpintergiciel.tpintergicielrkpvspring.repository.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.tpintergiciel.tpintergicielrkpvspring.config.*;
 
 import java.util.List;
 import java.util.Optional;
