@@ -11,6 +11,7 @@ import jakarta.persistence.Table;
 public class Client {
     @Id
     String nom;
+    boolean isLogged;
 
     public Client(){}
 
@@ -21,6 +22,9 @@ public class Client {
         this.nom=nom;
         consumerDynamic.createConsumer(nom,this);
         consumer.registerClient(this);
+    }
+    public Client(boolean isLogged){
+        this.isLogged=isLogged;
     }
 
     public void receiveMessage(String message) {
@@ -33,5 +37,12 @@ public class Client {
 
     public void setNom(String nom) {
         this.nom = nom;
+    }
+
+    public boolean isLogged() {
+        return isLogged;
+    }
+    public void setLogged(boolean logged) {
+        isLogged = logged;
     }
 }
