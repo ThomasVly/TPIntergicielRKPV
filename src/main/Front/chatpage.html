@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Dynamique</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            height: 100vh;
+        }
+
+        .sidebar {
+            width: 200px;
+            background-color: #2c2f33;
+            color: white;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar h3 {
+            margin: 0 0 15px;
+            font-size: 18px;
+            text-align: center;
+        }
+
+        .user {
+            padding: 8px;
+            background: #40444b;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .container {
+            flex: 1;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            width: 400px;
+            margin: auto;
+        }
+
+        .messages {
+            height: 70vh; /* Augmenter la taille de la fenêtre de messages */
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 4px;
+            text-align: left;
+        }
+
+        .message {
+            background: #f4f4f4;
+            padding: 8px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .input-container {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .input-container input {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .btn {
+            background-color: #ff6c00;
+            color: white;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .btn:hover {
+            background-color: #e65c00;
+        }
+    </style>
+</head>
+<body>
+<div class="sidebar">
+    <h3>Utilisateurs</h3>
+    <div class="user">David</div>
+    <div class="user">Manuel</div>
+</div>
+<div class="container">
+    <h2>Chat</h2>
+    <div class="messages" id="messages"></div>
+    <div class="input-container">
+        <input type="text" id="messageInput" placeholder="Écrire un message...">
+        <button class="btn" onclick="sendMessage()">Envoyer</button>
+    </div>
+</div>
+
+<script>
+    const username = "David";
+    const receiver = "Manuel";
+    let maxId = 0;
+
+    function fetchMessages() {
+        fetch("http://localhost:8081/msg/get")
+            .then(response => response.json())
+            .then(data => {
+                const messagesContainer = document.getElementById("messages");
+                messagesContainer.innerHTML = "";
+                maxId = data.reduce((max, msg) => Math.max(max, msg.id), 0);
+                data.forEach(msg => {
+                    const messageElement = document.createElement("div");
+                    messageElement.classList.add("message");
+                    messageElement.innerHTML = `<strong>${msg.expediteur}:</strong> ${msg.message}`;  // Pas d'affichage de l'ID
+                    messagesContainer.appendChild(messageElement);
+                });
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            })
+            .catch(error => console.error("Erreur lors du chargement des messages:", error));
+    }
+
+    function sendMessage() {
+        const messageInput = document.getElementById("messageInput");
+        const message = messageInput.value.trim();
+
+        if (message === "") return;
+
+        const newId = maxId + 1;
+
+        fetch("http://localhost:8081/msg/create", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ id: newId, expediteur: username, receveur: receiver, message: message })
+        })
+            .then(response => response.json())
+            .then(msg => {
+                messageInput.value = "";
+                const messagesContainer = document.getElementById("messages");
+                const messageElement = document.createElement("div");
+                messageElement.classList.add("message");
+                messageElement.innerHTML = `<strong>${msg.expediteur}:</strong> ${msg.message}`;  // Pas d'affichage de l'ID
+                messagesContainer.appendChild(messageElement);
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                maxId = newId;
+            })
+            .catch(error => console.error("Erreur lors de l'envoi du message:", error));
+    }
+
+    setInterval(fetchMessages, 2000);
+    fetchMessages();
+</script>
+</body>
+</html>
