@@ -5,7 +5,7 @@ WORKDIR /app
 COPY target/TPIntergicielRKPVSpring-0.0.1-SNAPSHOT.jar app.jar
 
 # Exposer le port sur lequel l'application écoute
-EXPOSE 8080
+EXPOSE 8085
 
 # Commande pour démarrer l'application
 ENTRYPOINT ["java", "-jar", "app.jar"]
