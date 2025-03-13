@@ -35,7 +35,7 @@ services:
       dockerfile: Dockerfile
     container_name: kafka-app
     ports:
-      - "8080:8080"
+      - "8081:8080"
 volumes:
   db:
 
