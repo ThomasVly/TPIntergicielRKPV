@@ -110,6 +110,8 @@
             .then(isAuthenticated =>{
                 if(isAuthenticated){
                     console.log("Connexion réussie")
+                    window.location.href = "chatpage.html";
+
                 }
                 else{
                     console.log("connexion failed")
