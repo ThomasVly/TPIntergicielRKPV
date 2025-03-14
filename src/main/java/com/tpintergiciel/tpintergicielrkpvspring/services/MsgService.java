@@ -16,7 +16,12 @@ public class MsgService {
     private MsgRepository msgRepository;
 
     public List<Msg> getAllMsg() {
+        System.out.println(msgRepository.findAll());
         return msgRepository.findAll();
+    }
+
+    public Msg createMsg(Msg msg) {
+        return msgRepository.save(msg);
     }
 
 
