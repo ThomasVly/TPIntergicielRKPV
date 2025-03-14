@@ -92,7 +92,6 @@
             <input type="text" id="username" placeholder="Entrez votre nom d'utilisateur" required>
         </div>
 
-        <!-- Choix entre connexion publique et pseudo-anonyme -->
         <div class="radio-group">
             <label><input type="radio" name="mode" value="public" checked> Public</label>
             <label><input type="radio" name="mode" value="pseudo-anonyme"> Pseudo-anonyme</label>
@@ -104,51 +103,38 @@
 </div>
 
 <script>
-    fetch("http://localhost:8081/clients/get", {
-        method: "GET"
-    })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error("Erreur réseau");
-            }
-            return response.json();
-        })
-
-
     document.getElementById("login-form").addEventListener("submit", function (e) {
-        e.preventDefault();  // Empêche le rechargement de la page
+        e.preventDefault();
 
         const username = document.getElementById("username").value.trim();
         const mode = document.querySelector('input[name="mode"]:checked').value;
 
-        fetch("http://localhost:8081/clients/login", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                username: username,
-            })
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error("Erreur réseau");
-                }
-                return response.json();
-            })
-            .then(isAuthenticated => {
-                if (isAuthenticated) {
-                    console.log("Connexion réussie");
+        // Stocker l'utilisateur et le mode choisi
+        localStorage.setItem("user", JSON.stringify({ username, mode }));
 
-                    // Stocke l'utilisateur et le mode choisi
-                    localStorage.setItem("user", JSON.stringify({ username, mode }));
-
-                    window.location.href = "chatpage.html";
-                } else {
-                    console.log("Connexion échouée");
-                }
+        if (mode === "pseudo-anonyme") {
+            window.location.href = "chatpage.html";
+        } else {
+            fetch("http://localhost:8081/clients/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ username })
             })
-            .catch(error => console.error("Erreur :", error));
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Erreur réseau");
+                    }
+                    return response.json();
+                })
+                .then(isAuthenticated => {
+                    if (isAuthenticated) {
+                        window.location.href = "chatpage.html";
+                    } else {
+                        console.log("Connexion échouée");
+                    }
+                })
+                .catch(error => console.error("Erreur :", error));
+        }
     });
 </script>
 
