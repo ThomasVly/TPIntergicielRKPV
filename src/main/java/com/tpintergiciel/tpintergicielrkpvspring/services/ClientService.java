@@ -28,29 +28,36 @@ public class ClientService {
 
     public boolean loginClient(String username) {
         System.out.println("ALLOOO");
+
         for (Client client : getAllClients()) {
             System.out.println(client.getNom());
             System.out.println(username);
-        if (Objects.equals(username, client.getNom())){
-            client.setLogged(true);
-            return true;
-        }
+
+            if (Objects.equals(username, client.getNom())) {
+                client.setLogged(true);
+                clientRepository.save(client);  // 🔥 Enregistrement en base
+                return true;
+            }
         }
         return false;
     }
+
     public void logoutClient(String username) {
-       for (Client client : getAllClients()) {
-           if (Objects.equals(username, client.getNom())){
-               client.setLogged(false);
-           }
-       }
+        for (Client client : getAllClients()) {
+            if (Objects.equals(username, client.getNom())) {
+                client.setLogged(false);
+                clientRepository.save(client);  // 🔥 Enregistrement en base
+            }
+        }
     }
+
     public List<Client> getAllConnectedClients(){
         List<Client> clients = getAllClients();
         List<Client> connectedClients = new ArrayList<>();
         for (Client client : clients) {
             if(client.isLogged()){
                 connectedClients.add(client);
+
             }
         }
         return connectedClients;

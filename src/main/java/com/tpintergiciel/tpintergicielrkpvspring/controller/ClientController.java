@@ -27,6 +27,7 @@ public class ClientController {
     public List<Client> getAllClients() {
         return clientService.getAllClients();
     }
+
     @PostMapping("/login")
     public boolean login(@RequestBody Map<String, String> payload) {
         String username = payload.get("username");
