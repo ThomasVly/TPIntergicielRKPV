@@ -133,6 +133,8 @@
             .then(response => response.json())
             .then(data => {
                 const messagesContainer = document.getElementById("messages");
+                const isScrolledToBottom = messagesContainer.scrollHeight - messagesContainer.clientHeight <= messagesContainer.scrollTop + 1;
+
                 messagesContainer.innerHTML = "";
                 data.filter(msg => msg.receveur === selectedTopic)
                     .forEach(msg => {
@@ -141,7 +143,11 @@
                         messageElement.innerHTML = `<strong>${msg.expediteur}:</strong> ${msg.message}`;
                         messagesContainer.appendChild(messageElement);
                     });
-                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+                // Si l'utilisateur était déjà en bas, on défile jusqu'au bas
+                if (isScrolledToBottom) {
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                }
             })
             .catch(error => console.error("Erreur chargement messages:", error));
     }
