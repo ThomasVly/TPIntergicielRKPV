@@ -35,6 +35,7 @@ public class KafkaConsumerDynamic {
         factory.getContainerProperties().setGroupId("group_" + topicName);
         ConcurrentMessageListenerContainer<String, String> container = factory.createContainer(topicName);
         container.setupMessageListener((MessageListener<String, String>) record -> {
+            System.out.println("Message reçu : " + record.value());
             String message = record.value();
             String beforePlus = message.split("\\+")[0];
             String afterPlus = message.split("\\+")[1];
