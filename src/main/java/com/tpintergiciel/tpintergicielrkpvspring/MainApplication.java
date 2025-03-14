@@ -41,11 +41,14 @@ public class MainApplication {
             KafkaConsumerDynamic dynamic = context.getBean(KafkaConsumerDynamic.class);
             Client client = new Client(consumer,dynamic,"David");
             Client client2 = new Client(consumer,dynamic,"Manuel");
+            Client client3 = new Client(consumer,dynamic,"Francis");
+            client3.setLogged(true);
             producer.writeMessage("Hello Kafka from local!","Manuel","David");
             System.out.println("Message envoyé directement à Kafka !");
 
             clientController.createClient(client);
             clientController.createClient(client2);
+            clientController.createClient(client3);
             System.out.println(clientController.getAllClients().get(0).getNom());
             System.out.println("yousk2");
 
