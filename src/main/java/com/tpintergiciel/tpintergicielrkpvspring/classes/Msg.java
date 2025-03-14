@@ -24,6 +24,14 @@ public class Msg {
         this.message = message;
     }
 
+    public Msg(int i, String beforePlus, String myTopic, String afterPlus) {
+        this.id = i;
+        this.expediteur = beforePlus;
+        this.receveur = myTopic;
+        this.message = afterPlus;
+        }
+
+
     public int getId() {
         return id;
     }
@@ -38,5 +46,8 @@ public class Msg {
 
     public String getMessage() {
         return message;
+    }
+    public String toString(){
+        return expediteur + receveur + message;
     }
 }
