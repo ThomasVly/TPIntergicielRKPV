@@ -136,8 +136,11 @@
                 const isScrolledToBottom = messagesContainer.scrollHeight - messagesContainer.clientHeight <= messagesContainer.scrollTop + 1;
 
                 messagesContainer.innerHTML = "";
-                data.filter(msg => (msg.receveur === selectedTopic && msg.expediteur ===username)||(msg.receveur === username && msg.expediteur ===selectedTopic))
-                    .forEach(msg => {
+                let filteredMessages = selectedTopic === "my_topic"
+                    ? data.filter(msg => msg.receveur === selectedTopic)
+                    : data.filter(msg => (msg.receveur === selectedTopic && msg.expediteur === username) ||
+                        (msg.receveur === username && msg.expediteur === selectedTopic));
+                    filteredMessages.forEach(msg => {
                         const messageElement = document.createElement("div");
                         messageElement.classList.add("message");
                         messageElement.innerHTML = `<strong>${msg.expediteur}:</strong> ${msg.message}`;
@@ -168,6 +171,7 @@
         }).then(() => messageInput.value = "")
             .catch(error => console.error("Erreur envoi message:", error));
     }
+
 
     function fetchUsers() {
         fetch("http://localhost:8081/clients/get")

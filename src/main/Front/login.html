@@ -113,7 +113,24 @@
         localStorage.setItem("user", JSON.stringify({ username, mode }));
 
         if (mode === "pseudo-anonyme") {
-            window.location.href = "chatpage.html";
+            fetch("http://localhost:8081/clients/get", {
+                method: "GET",
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Erreur réseau");
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Vérifier si la réponse contient une certaine chaîne ou condition spécifique
+                    if (data.some(client => client.nom === username)) {
+                        window.location.href = "chatpage.html";
+                    } else {
+                        alert("Utilisateur non trouvé !");
+                    }
+                })
+                .catch(error => console.error("Erreur :", error));
         } else {
             fetch("http://localhost:8081/clients/login", {
                 method: "POST",
@@ -130,6 +147,7 @@
                     if (isAuthenticated) {
                         window.location.href = "chatpage.html";
                     } else {
+                        alert("Utilisateur non trouvé !");
                         console.log("Connexion échouée");
                     }
                 })
