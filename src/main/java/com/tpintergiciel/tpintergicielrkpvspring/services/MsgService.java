@@ -16,7 +16,6 @@ public class MsgService {
     private MsgRepository msgRepository;
 
     public List<Msg> getAllMsg() {
-        System.out.println(msgRepository.findAll());
         return msgRepository.findAll();
     }
 
