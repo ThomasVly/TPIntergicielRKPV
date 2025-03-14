@@ -4,6 +4,8 @@ import com.tpintergiciel.tpintergicielrkpvspring.classes.Client;
 import com.tpintergiciel.tpintergicielrkpvspring.classes.Msg;
 import com.tpintergiciel.tpintergicielrkpvspring.controller.ClientController;
 import com.tpintergiciel.tpintergicielrkpvspring.controller.MsgController;
+import com.tpintergiciel.tpintergicielrkpvspring.kafka.KafkaConsumer;
+import com.tpintergiciel.tpintergicielrkpvspring.kafka.KafkaConsumerDynamic;
 import com.tpintergiciel.tpintergicielrkpvspring.kafka.KafkaProducer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -20,8 +22,7 @@ public class MainApplication {
     public static void main(String[] args) {
         SpringApplication.run(MainApplication.class, args);
     }
-    Client client = new Client("David");
-    Client client2 = new Client("Manuel");
+
 
     Msg msg1 = new Msg("David","Manuel", "ping");
 
@@ -36,7 +37,11 @@ public class MainApplication {
     CommandLineRunner sendKafkaMessage(ApplicationContext context) {
         return args -> {
             KafkaProducer producer = context.getBean(KafkaProducer.class);
-            producer.writeMessage("Hello Kafka from local!","my_topic","David");
+            KafkaConsumer consumer = context.getBean(KafkaConsumer.class);
+            KafkaConsumerDynamic dynamic = context.getBean(KafkaConsumerDynamic.class);
+            Client client = new Client(consumer,dynamic,"David");
+            Client client2 = new Client(consumer,dynamic,"Manuel");
+            producer.writeMessage("Hello Kafka from local!","Manuel","David");
             System.out.println("Message envoyé directement à Kafka !");
 
             clientController.createClient(client);
