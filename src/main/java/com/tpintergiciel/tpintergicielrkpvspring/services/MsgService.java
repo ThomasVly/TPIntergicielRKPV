@@ -15,10 +15,6 @@ public class MsgService {
     @Autowired
     private MsgRepository msgRepository;
 
-    public Msg createMsg(Msg msg) {
-        return msgRepository.save(msg);
-    }
-
     public List<Msg> getAllMsg() {
         return msgRepository.findAll();
     }
