@@ -16,10 +16,10 @@ public class MsgController {
     @Autowired
     private MsgService msgService;
 
-    @PostMapping("/create")
-    public Msg createMsg(@RequestBody Msg msg) {
-        return msgService.createMsg(msg);
-    }
+    //@PostMapping("/create")
+    //public Msg createMsg(@RequestBody Msg msg) {
+    //    return msgService.createMsg(msg);
+    //}
 
     // Get all users
     @GetMapping("/get")
