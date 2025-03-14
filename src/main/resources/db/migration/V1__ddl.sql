@@ -6,7 +6,7 @@ CREATE TABLE client
 
 CREATE TABLE msg
 (
-    id integer not null,
+    id SERIAL PRIMARY KEY,
     expediteur text,
     receveur text,
     message text
