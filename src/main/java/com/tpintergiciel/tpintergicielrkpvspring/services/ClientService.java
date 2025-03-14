@@ -44,6 +44,7 @@ public class ClientService {
 
     public void logoutClient(String username) {
         for (Client client : getAllClients()) {
+            System.out.println("Déconnexion demandée pour : " + username + "test sur " + client.getNom());
             if (Objects.equals(username, client.getNom())) {
                 client.setLogged(false);
                 clientRepository.save(client);  // 🔥 Enregistrement en base
