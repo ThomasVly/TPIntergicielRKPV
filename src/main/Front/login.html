@@ -110,6 +110,7 @@
             .then(isAuthenticated =>{
                 if(isAuthenticated){
                     console.log("Connexion réussie")
+                    localStorage.setItem("user", JSON.stringify(username));
                     window.location.href = "chatpage.html";
 
                 }
