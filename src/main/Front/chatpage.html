@@ -20,6 +20,14 @@
             display: flex;
             flex-direction: column;
         }
+        .user-info {
+            font-size: 14px;
+            text-align: center;
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #23272a;
+            border-radius: 4px;
+        }
         .sidebar h3 {
             margin: 0 0 15px;
             font-size: 18px;
@@ -100,6 +108,7 @@
 </head>
 <body>
 <div class="sidebar">
+    <div class="user-info">Connecté en tant que : <span id="current-user"></span></div>
     <h3>Discussion</h3>
     <div class="general-btn" onclick="selectTopic('my_topic', this)">Général</div>
     <h3>Utilisateurs</h3>
@@ -119,13 +128,14 @@
     let selectedTopic = "my_topic";
     const username = user.username;
 
-    // Désactive l'input et le bouton si l'utilisateur est en mode pseudo-anonyme
+    document.getElementById("current-user").innerText = username;
+
     if (user.mode === "pseudo-anonyme") {
         const messageInput = document.getElementById("messageInput");
         const sendButton = document.querySelector(".btn");
         messageInput.disabled = true;
         sendButton.disabled = true;
-        messageInput.placeholder = "Vous êtes en mode pseudo-anonyme, vous ne pouvez pas envoyer de messages.";
+        messageInput.placeholder = "Mode pseudo-anonyme : envoi désactivé.";
     }
 
     function fetchMessages() {
@@ -140,14 +150,15 @@
                     ? data.filter(msg => msg.receveur === selectedTopic)
                     : data.filter(msg => (msg.receveur === selectedTopic && msg.expediteur === username) ||
                         (msg.receveur === username && msg.expediteur === selectedTopic));
-                    filteredMessages.forEach(msg => {
-                        const messageElement = document.createElement("div");
-                        messageElement.classList.add("message");
-                        messageElement.innerHTML = `<strong>${msg.expediteur}:</strong> ${msg.message}`;
-                        messagesContainer.appendChild(messageElement);
-                    });
 
-                // Si l'utilisateur était déjà en bas, on défile jusqu'au bas
+                filteredMessages.forEach(msg => {
+                    const messageElement = document.createElement("div");
+                    messageElement.classList.add("message");
+                    const expediteurAffiche = msg.expediteur === username ? "Moi" : msg.expediteur;
+                    messageElement.innerHTML = `<strong>${expediteurAffiche}:</strong> ${msg.message}`;
+                    messagesContainer.appendChild(messageElement);
+                });
+
                 if (isScrolledToBottom) {
                     messagesContainer.scrollTop = messagesContainer.scrollHeight;
                 }
@@ -172,7 +183,6 @@
             .catch(error => console.error("Erreur envoi message:", error));
     }
 
-
     function fetchUsers() {
         fetch("http://localhost:8081/clients/get")
             .then(response => response.json())
@@ -182,7 +192,13 @@
                 users.filter(user => user.logged).forEach(user => {
                     const userElement = document.createElement("div");
                     userElement.classList.add("user");
-                    userElement.innerText = user.nom;
+
+                    if (user.nom === username) {
+                        userElement.innerText = "Moi";
+                    } else {
+                        userElement.innerText = user.nom;
+                    }
+
                     userElement.onclick = () => selectTopic(user.nom, userElement);
                     usersList.appendChild(userElement);
                 });
@@ -202,7 +218,7 @@
         document.querySelectorAll(".user, .general-btn").forEach(el => {
             if (el.innerText === "Général" && selectedTopic === "my_topic") {
                 el.classList.add("selected");
-            } else if (el.innerText === selectedTopic) {
+            } else if (el.innerText === selectedTopic || (el.innerText === "Moi" && selectedTopic === username)) {
                 el.classList.add("selected");
             }
         });

@@ -42,7 +42,6 @@ public class MainApplication {
             Client client = new Client(consumer,dynamic,"David");
             Client client2 = new Client(consumer,dynamic,"Manuel");
             Client client3 = new Client(consumer,dynamic,"Francis");
-            client3.setLogged(true);
             producer.writeMessage("Hello Kafka from local!","Manuel","David");
             System.out.println("Message envoyé directement à Kafka !");
 
