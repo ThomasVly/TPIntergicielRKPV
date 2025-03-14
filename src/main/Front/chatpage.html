@@ -19,19 +19,25 @@
             padding: 20px;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
         }
         .sidebar h3 {
             margin: 0 0 15px;
             font-size: 18px;
             text-align: center;
         }
-        .user {
+        .user, .general-btn {
             padding: 8px;
             background: #40444b;
             margin-bottom: 10px;
             border-radius: 4px;
             text-align: center;
+            cursor: pointer;
+        }
+        .user:hover, .general-btn:hover {
+            background-color: #555a60;
+        }
+        .selected {
+            background-color: #7289da !important;
         }
         .logout-btn {
             background-color: #ff6c00;
@@ -42,6 +48,7 @@
             cursor: pointer;
             font-size: 14px;
             text-align: center;
+            margin-top: auto;
         }
         .logout-btn:hover {
             background-color: #cc0000;
@@ -66,12 +73,6 @@
             border-radius: 4px;
             text-align: left;
         }
-        .message {
-            background: #f4f4f4;
-            padding: 8px;
-            border-radius: 4px;
-            margin-bottom: 10px;
-        }
         .input-container {
             margin-top: 10px;
             display: flex;
@@ -91,7 +92,6 @@
             border: none;
             border-radius: 4px;
             cursor: pointer;
-            font-size: 14px;
         }
         .btn:hover {
             background-color: #e65c00;
@@ -100,11 +100,10 @@
 </head>
 <body>
 <div class="sidebar">
-    <div>
-        <h3>Utilisateurs</h3>
-        <div class="user">David</div>
-        <div class="user">Manuel</div>
-    </div>
+    <h3>Discussion</h3>
+    <div class="general-btn" onclick="selectTopic('my_topic', this)">Général</div>
+    <h3>Utilisateurs</h3>
+    <div id="users-list"></div>
     <button class="logout-btn" onclick="logout()">Déconnexion</button>
 </div>
 <div class="container">
@@ -117,9 +116,8 @@
 </div>
 <script>
     const user = JSON.parse(localStorage.getItem("user"));
-    const username = user ? user.username : "Anonyme";
-    const topic = "my_topic";
-
+    let selectedTopic = "my_topic";
+    const username = user.username;
 
     function fetchMessages() {
         fetch("http://localhost:8081/msg/get")
@@ -127,77 +125,84 @@
             .then(data => {
                 const messagesContainer = document.getElementById("messages");
                 messagesContainer.innerHTML = "";
-
-                let lastId = data.length > 0 ? Math.max(...data.map(msg => msg.id)) : 0;
-
-                data.forEach(msg => {
-                    const messageElement = document.createElement("div");
-                    messageElement.classList.add("message");
-                    messageElement.innerHTML = `<strong>${msg.expediteur}:</strong> ${msg.message}`;
-                    messagesContainer.appendChild(messageElement);
-                });
+                data.filter(msg => msg.receveur === selectedTopic)
+                    .forEach(msg => {
+                        const messageElement = document.createElement("div");
+                        messageElement.classList.add("message");
+                        messageElement.innerHTML = `<strong>${msg.expediteur}:</strong> ${msg.message}`;
+                        messagesContainer.appendChild(messageElement);
+                    });
                 messagesContainer.scrollTop = messagesContainer.scrollHeight;
-
-                localStorage.setItem("lastMessageId", lastId);
             })
-            .catch(error => console.error("Erreur lors du chargement des messages:", error));
+            .catch(error => console.error("Erreur chargement messages:", error));
     }
 
     function sendMessage() {
         const messageInput = document.getElementById("messageInput");
         const messageText = messageInput.value.trim();
-
         if (messageText === "") return;
-
-        const lastMessageId = localStorage.getItem("lastMessageId") || 0;
-        const newMessageId = parseInt(lastMessageId) + 1;
-
-        const message = {
-            id: newMessageId,
-            expediteur: "David",  // Test expéditeur
-            receveur: "Manuel",   // Test receveur
-            message: messageText
-        };
 
         fetch("http://localhost:8081/Kafka/publish", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded"
-            },
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
             body: new URLSearchParams({
                 message: messageText,
-                topic: topic,
+                topic: selectedTopic,
                 nom: username
             })
-        })
-            .then(response => {
-                if (!response.ok) throw new Error("Erreur lors de l'envoi du message");
-                return response.text();
+        }).then(() => messageInput.value = "")
+            .catch(error => console.error("Erreur envoi message:", error));
+    }
+
+    function fetchUsers() {
+        fetch("http://localhost:8081/clients/get")
+            .then(response => response.json())
+            .then(users => {
+                const usersList = document.getElementById("users-list");
+                usersList.innerHTML = "";
+                users.filter(user => user.logged).forEach(user => {
+                    const userElement = document.createElement("div");
+                    userElement.classList.add("user");
+                    userElement.innerText = user.nom;
+                    userElement.onclick = () => selectTopic(user.nom, userElement);
+                    usersList.appendChild(userElement);
+                });
+                highlightSelected();
             })
-            .then(() => {
-                messageInput.value = "";
-            })
-            .catch(error => console.error("Erreur lors de l'envoi du message:", error));
+            .catch(error => console.error("Erreur chargement utilisateurs:", error));
+    }
+
+    function selectTopic(topic, element) {
+        selectedTopic = topic;
+        document.querySelectorAll(".user, .general-btn").forEach(el => el.classList.remove("selected"));
+        element.classList.add("selected");
+        fetchMessages();
+    }
+
+    function highlightSelected() {
+        document.querySelectorAll(".user, .general-btn").forEach(el => {
+            if (el.innerText === "Général" && selectedTopic === "my_topic") {
+                el.classList.add("selected");
+            } else if (el.innerText === selectedTopic) {
+                el.classList.add("selected");
+            }
+        });
     }
 
     function logout() {
         fetch("http://localhost:8081/clients/logout", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ username: username })
-        })
-            .then(() => {
-                localStorage.removeItem("user");
-                window.location.href = "login.html";
-            })
-            .catch(error => console.error("Erreur lors de la déconnexion:", error));
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username })
+        }).then(() => {
+            window.location.href = "login.html";
+        }).catch(error => console.error("Erreur déconnexion:", error));
     }
 
     setInterval(fetchMessages, 2000);
+    setInterval(fetchUsers, 5000);
     fetchMessages();
+    fetchUsers();
 </script>
-
 </body>
 </html>
