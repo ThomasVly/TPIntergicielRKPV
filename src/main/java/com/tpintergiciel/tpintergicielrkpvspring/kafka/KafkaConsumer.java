@@ -32,6 +32,5 @@ public class KafkaConsumer {
         Msg msg = new Msg(beforePlus,"my_topic",afterPlus);
         msgRepository.save(msg);
         System.out.println(message);
-
     }
 }
