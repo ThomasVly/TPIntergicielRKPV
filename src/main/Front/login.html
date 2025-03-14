@@ -50,6 +50,17 @@
             font-size: 12px;
         }
 
+        .radio-group {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+        }
+
+        .radio-group label {
+            font-size: 14px;
+            color: #333;
+        }
+
         .btn {
             background-color: #ff6c00;
             color: #ffffff;
@@ -80,17 +91,35 @@
             <label for="username">Nom d'utilisateur</label>
             <input type="text" id="username" placeholder="Entrez votre nom d'utilisateur" required>
         </div>
+
+        <!-- Choix entre connexion publique et pseudo-anonyme -->
+        <div class="radio-group">
+            <label><input type="radio" name="mode" value="public" checked> Public</label>
+            <label><input type="radio" name="mode" value="pseudo-anonyme"> Pseudo-anonyme</label>
+        </div>
+
         <button type="submit" class="btn">Connexion</button>
     </form>
-    <footer>
-    </footer>
+    <footer></footer>
 </div>
 
 <script>
+    fetch("http://localhost:8081/clients/get", {
+        method: "GET"
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Erreur réseau");
+            }
+            return response.json();
+        })
+
+
     document.getElementById("login-form").addEventListener("submit", function (e) {
         e.preventDefault();  // Empêche le rechargement de la page
 
         const username = document.getElementById("username").value.trim();
+        const mode = document.querySelector('input[name="mode"]:checked').value;
 
         fetch("http://localhost:8081/clients/login", {
             method: "POST",
@@ -105,22 +134,22 @@
                 if (!response.ok) {
                     throw new Error("Erreur réseau");
                 }
-                return response.json()
+                return response.json();
             })
-            .then(isAuthenticated =>{
-                if(isAuthenticated){
-                    console.log("Connexion réussie")
-                    localStorage.setItem("user", JSON.stringify(username));
-                    window.location.href = "chatpage.html";
+            .then(isAuthenticated => {
+                if (isAuthenticated) {
+                    console.log("Connexion réussie");
 
-                }
-                else{
-                    console.log("connexion failed")
+                    // Stocke l'utilisateur et le mode choisi
+                    localStorage.setItem("user", JSON.stringify({ username, mode }));
+
+                    window.location.href = "chatpage.html";
+                } else {
+                    console.log("Connexion échouée");
                 }
             })
             .catch(error => console.error("Erreur :", error));
     });
-
 </script>
 
 </body>

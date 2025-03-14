@@ -135,6 +135,15 @@
     const username = user.nom;
     const receiver = "Manuel";
     let maxId = 0;
+    fetch("http://localhost:8081/clients/get", {
+        method: "GET"
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Erreur réseau");
+            }
+            return response.json();
+        })
 
     function fetchMessages() {
         fetch("http://localhost:8081/msg/get")
