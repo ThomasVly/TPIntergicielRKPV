@@ -20,6 +20,7 @@
             padding: 20px;
             display: flex;
             flex-direction: column;
+            justify-content: space-between;
         }
 
         .sidebar h3 {
@@ -36,6 +37,21 @@
             text-align: center;
         }
 
+        .logout-btn {
+            background-color: #ff6c00;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .logout-btn:hover {
+            background-color: #cc0000;
+        }
+
         .container {
             flex: 1;
             background-color: #ffffff;
@@ -50,7 +66,7 @@
         }
 
         .messages {
-            height: 70vh; /* Augmenter la taille de la fenêtre de messages */
+            height: 70vh;
             overflow-y: auto;
             border: 1px solid #ccc;
             padding: 10px;
@@ -96,9 +112,12 @@
 </head>
 <body>
 <div class="sidebar">
-    <h3>Utilisateurs</h3>
-    <div class="user">David</div>
-    <div class="user">Manuel</div>
+    <div>
+        <h3>Utilisateurs</h3>
+        <div class="user">David</div>
+        <div class="user">Manuel</div>
+    </div>
+    <button class="logout-btn" onclick="logout()">Déconnexion</button>
 </div>
 <div class="container">
     <h2>Chat</h2>
@@ -110,7 +129,10 @@
 </div>
 
 <script>
-    const username = "David";
+    const user = JSON.parse(localStorage.getItem("user"));
+    console.log(user);
+
+    const username = user.nom;
     const receiver = "Manuel";
     let maxId = 0;
 
@@ -124,7 +146,7 @@
                 data.forEach(msg => {
                     const messageElement = document.createElement("div");
                     messageElement.classList.add("message");
-                    messageElement.innerHTML = `<strong>${msg.expediteur}:</strong> ${msg.message}`;  // Pas d'affichage de l'ID
+                    messageElement.innerHTML = `<strong>${msg.expediteur}:</strong> ${msg.message}`;
                     messagesContainer.appendChild(messageElement);
                 });
                 messagesContainer.scrollTop = messagesContainer.scrollHeight;
@@ -151,12 +173,17 @@
                 const messagesContainer = document.getElementById("messages");
                 const messageElement = document.createElement("div");
                 messageElement.classList.add("message");
-                messageElement.innerHTML = `<strong>${msg.expediteur}:</strong> ${msg.message}`;  // Pas d'affichage de l'ID
+                messageElement.innerHTML = `<strong>${msg.expediteur}:</strong> ${msg.message}`;
                 messagesContainer.appendChild(messageElement);
                 messagesContainer.scrollTop = messagesContainer.scrollHeight;
                 maxId = newId;
             })
             .catch(error => console.error("Erreur lors de l'envoi du message:", error));
+    }
+
+    function logout() {
+        localStorage.removeItem("user");
+        window.location.href = "login.html";
     }
 
     setInterval(fetchMessages, 2000);
