@@ -39,6 +39,12 @@ public class ClientController {
         return clientService.getAllConnectedClients();
     }
 
+    @PostMapping("/logout")
+    public void logout(@RequestBody Map<String, String> payload) {
+        String username = payload.get("username");
+        clientService.logoutClient(username);
+    }
+
     // Get user by ID
 
 }

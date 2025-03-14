@@ -1,14 +1,12 @@
 package com.tpintergiciel.tpintergicielrkpvspring.classes;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "msg")
 public class Msg {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     int id;
     @Column(name = "expediteur")
@@ -20,9 +18,7 @@ public class Msg {
 
     public Msg(){}
 
-    public Msg(int id, String from, String to, String message) {
-
-        this.id = id;
+    public Msg(String from, String to, String message) {
         this.expediteur = from;
         this.receveur = to;
         this.message = message;

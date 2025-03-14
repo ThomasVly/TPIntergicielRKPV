@@ -23,9 +23,9 @@ public class MainApplication {
     Client client = new Client("David");
     Client client2 = new Client("Manuel");
 
-    Msg msg1 = new Msg(1,"David","Manuel", "ping");
+    Msg msg1 = new Msg("David","Manuel", "ping");
 
-    Msg msg2 = new Msg(2,"Manuel","David", "pong");
+    Msg msg2 = new Msg("Manuel","David", "pong");
 
     @Autowired
     private ClientController clientController;
@@ -36,7 +36,7 @@ public class MainApplication {
     CommandLineRunner sendKafkaMessage(ApplicationContext context) {
         return args -> {
             KafkaProducer producer = context.getBean(KafkaProducer.class);
-            producer.writeMessage("Hello Kafka from local!","my_topic");
+            producer.writeMessage("Hello Kafka from local!","my_topic","David");
             System.out.println("Message envoyé directement à Kafka !");
 
             clientController.createClient(client);
@@ -44,9 +44,6 @@ public class MainApplication {
             System.out.println(clientController.getAllClients().get(0).getNom());
             System.out.println("yousk2");
 
-            msgController.createMsg(msg1);
-
-            msgController.createMsg(msg2);
 
         };
     }

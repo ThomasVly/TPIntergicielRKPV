@@ -13,8 +13,8 @@ public class KafkaProducer {
     @Autowired
     private KafkaTemplate<String, String> kafkaTemplate;
 
-    public void writeMessage(String msg, String topic){
-
+    public void writeMessage(String msg, String topic, String nom){
+        msg=nom+"+"+msg;
         this.kafkaTemplate.send(topic, msg);
         System.out.println("Message sent : "+msg);
     }
