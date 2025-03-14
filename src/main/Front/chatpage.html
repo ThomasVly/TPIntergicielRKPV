@@ -12,7 +12,6 @@
             display: flex;
             height: 100vh;
         }
-
         .sidebar {
             width: 200px;
             background-color: #2c2f33;
@@ -22,13 +21,11 @@
             flex-direction: column;
             justify-content: space-between;
         }
-
         .sidebar h3 {
             margin: 0 0 15px;
             font-size: 18px;
             text-align: center;
         }
-
         .user {
             padding: 8px;
             background: #40444b;
@@ -36,7 +33,6 @@
             border-radius: 4px;
             text-align: center;
         }
-
         .logout-btn {
             background-color: #ff6c00;
             color: white;
@@ -47,11 +43,9 @@
             font-size: 14px;
             text-align: center;
         }
-
         .logout-btn:hover {
             background-color: #cc0000;
         }
-
         .container {
             flex: 1;
             background-color: #ffffff;
@@ -64,7 +58,6 @@
             width: 400px;
             margin: auto;
         }
-
         .messages {
             height: 70vh;
             overflow-y: auto;
@@ -73,20 +66,17 @@
             border-radius: 4px;
             text-align: left;
         }
-
         .message {
             background: #f4f4f4;
             padding: 8px;
             border-radius: 4px;
             margin-bottom: 10px;
         }
-
         .input-container {
             margin-top: 10px;
             display: flex;
             gap: 10px;
         }
-
         .input-container input {
             flex: 1;
             padding: 8px;
@@ -94,7 +84,6 @@
             border-radius: 4px;
             font-size: 14px;
         }
-
         .btn {
             background-color: #ff6c00;
             color: white;
@@ -104,7 +93,6 @@
             cursor: pointer;
             font-size: 14px;
         }
-
         .btn:hover {
             background-color: #e65c00;
         }
@@ -127,23 +115,10 @@
         <button class="btn" onclick="sendMessage()">Envoyer</button>
     </div>
 </div>
-
 <script>
     const user = JSON.parse(localStorage.getItem("user"));
-    console.log(user);
-
-    const username = user.username;
-    const receiver = "Manuel";
-    let maxId = 0;
-    fetch("http://localhost:8081/clients/get", {
-        method: "GET"
-    })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error("Erreur réseau");
-            }
-            return response.json();
-        })
+    const username = user ? user.nom : "Anonyme";
+    const topic = "my_topic";
 
     function fetchMessages() {
         fetch("http://localhost:8081/msg/get")
@@ -151,7 +126,9 @@
             .then(data => {
                 const messagesContainer = document.getElementById("messages");
                 messagesContainer.innerHTML = "";
-                maxId = data.reduce((max, msg) => Math.max(max, msg.id), 0);
+
+                let lastId = data.length > 0 ? Math.max(...data.map(msg => msg.id)) : 0;
+
                 data.forEach(msg => {
                     const messageElement = document.createElement("div");
                     messageElement.classList.add("message");
@@ -159,36 +136,48 @@
                     messagesContainer.appendChild(messageElement);
                 });
                 messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+                localStorage.setItem("lastMessageId", lastId);
             })
             .catch(error => console.error("Erreur lors du chargement des messages:", error));
     }
 
     function sendMessage() {
         const messageInput = document.getElementById("messageInput");
-        const message = messageInput.value.trim();
+        const messageText = messageInput.value.trim();
 
-        if (message === "") return;
+        if (messageText === "") return;
 
-        const newId = maxId + 1;
+        const lastMessageId = localStorage.getItem("lastMessageId") || 0;
+        const newMessageId = parseInt(lastMessageId) + 1;
 
-//        fetch("http://localhost:8081/msg/create", {
-//            method: "POST",
-        //           headers: { "Content-Type": "application/json" },
-        //           body: JSON.stringify({ id: newId, expediteur: username, receveur: receiver, message: message })
-        //       })
-        //          .then(response => response.json())
-        //   .then(msg => {
-        //        messageInput.value = "";
-        //       const messagesContainer = document.getElementById("messages");
-        //       const messageElement = document.createElement("div");
-        //       messageElement.classList.add("message");
-        //       messageElement.innerHTML = `<strong>${msg.expediteur}:</strong> ${msg.message}`;
-        //       messagesContainer.appendChild(messageElement);
-        //       messagesContainer.scrollTop = messagesContainer.scrollHeight;
-        //       maxId = newId;
-        //   })
-        //   .catch(error => console.error("Erreur lors de l'envoi du message:", error));
-        }
+        const message = {
+            id: newMessageId,
+            expediteur: "David",  // Test expéditeur
+            receveur: "Manuel",   // Test receveur
+            message: messageText
+        };
+
+        fetch("http://localhost:8081/Kafka/publish", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: new URLSearchParams({
+                message: JSON.stringify(message),
+                topic: topic,
+                nom: username
+            })
+        })
+            .then(response => {
+                if (!response.ok) throw new Error("Erreur lors de l'envoi du message");
+                return response.text();
+            })
+            .then(() => {
+                messageInput.value = "";
+            })
+            .catch(error => console.error("Erreur lors de l'envoi du message:", error));
+    }
 
     function logout() {
         fetch("http://localhost:8081/clients/logout", {
@@ -196,16 +185,18 @@
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({
-                username: username,
-            })
+            body: JSON.stringify({ username: username })
         })
-        //localStorage.removeItem("user");
-        //window.location.href = "login.html";
+            .then(() => {
+                localStorage.removeItem("user");
+                window.location.href = "login.html";
+            })
+            .catch(error => console.error("Erreur lors de la déconnexion:", error));
     }
 
     setInterval(fetchMessages, 2000);
     fetchMessages();
 </script>
+
 </body>
 </html>
