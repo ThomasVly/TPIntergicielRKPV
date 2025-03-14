@@ -35,7 +35,7 @@ public class ClientService {
 
             if (Objects.equals(username, client.getNom())) {
                 client.setLogged(true);
-                clientRepository.save(client);  // 🔥 Enregistrement en base
+                clientRepository.save(client);
                 return true;
             }
         }

@@ -31,6 +31,5 @@ public class KafkaConsumer {
         String afterPlus = message.split("\\+")[1];
         Msg msg = new Msg(beforePlus,"my_topic",afterPlus);
         msgRepository.save(msg);
-        System.out.println(message);
     }
 }
