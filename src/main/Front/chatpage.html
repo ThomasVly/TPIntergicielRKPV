@@ -117,8 +117,9 @@
 </div>
 <script>
     const user = JSON.parse(localStorage.getItem("user"));
-    const username = user ? user.nom : "Anonyme";
+    const username = user ? user.username : "Anonyme";
     const topic = "my_topic";
+
 
     function fetchMessages() {
         fetch("http://localhost:8081/msg/get")
@@ -164,7 +165,7 @@
                 "Content-Type": "application/x-www-form-urlencoded"
             },
             body: new URLSearchParams({
-                message: JSON.stringify(message),
+                message: messageText,
                 topic: topic,
                 nom: username
             })
