@@ -3,7 +3,7 @@
  Créé par :
  - Thomas VAULEY,  thomas.vauley@uphf.fr 22103281
  - Anthonin PAIN, anthonin.pain@uphf.fr 22103291
- - Adam KAOUKEB, 
+ - Adam KAOUKEB, adam.kaoukeb@uphf.fr 22103399
  - Antoine ROUILLARD, antoine.rouillard@uphf.fr 22103319
  
  Description courte : 
