@@ -46,6 +46,15 @@ services:
       - kafka-network
     environment:
       - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+  front:
+    build:
+      context: ./src/main/Front
+      dockerfile: Dockerfile
+    container_name: front
+    ports:
+      - "8080:80"
+    networks:
+      - kafka-network
 volumes:
   db:
 
