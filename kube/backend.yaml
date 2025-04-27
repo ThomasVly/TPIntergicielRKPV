@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafka-app-backend
+  labels:
+    app: kafka-app-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kafka-app-backend
+  template:
+    metadata:
+      labels:
+        app: kafka-app-backend
+    spec:
+      containers:
+        - name: kafka-app-backend
+          image: localhost:5000/kafka-app-backend
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
+              value: kafka:9092
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kafka-app-backend
+spec:
+  selector:
+    app: kafka-app-backend
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+  type: ClusterIP

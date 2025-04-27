@@ -1,3 +1,20 @@
+# Build
+FROM maven:3.9.6-eclipse-temurin-21-alpine AS build
+WORKDIR /app
+
+# Copier uniquement le fichier pom.xml pour télécharger les dépendances
+COPY pom.xml .
+
+# Télécharger les dépendances
+RUN mvn dependency:go-offline
+
+# Copier le reste du code source
+COPY src ./src
+
+# Compiler l'application
+RUN mvn clean package -DskipTests
+
+# Run
 FROM openjdk:21-jdk-slim
 WORKDIR /app
 
