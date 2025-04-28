@@ -139,7 +139,7 @@
     }
 
     function fetchMessages() {
-        fetch("http://localhost:8081/msg/get")
+        fetch("${windows.location.origin}/msg/get")
             .then(response => response.json())
             .then(data => {
                 const messagesContainer = document.getElementById("messages");
@@ -171,7 +171,7 @@
         const messageText = messageInput.value.trim();
         if (messageText === "") return;
 
-        fetch("http://localhost:8081/Kafka/publish", {
+        fetch("${windows.location.origin}/Kafka/publish", {
             method: "POST",
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
             body: new URLSearchParams({
@@ -184,7 +184,7 @@
     }
 
     function fetchUsers() {
-        fetch("http://localhost:8081/clients/get")
+        fetch("${windows.location.origin}/clients/get")
             .then(response => response.json())
             .then(users => {
                 const usersList = document.getElementById("users-list");
@@ -225,7 +225,7 @@
     }
 
     function logout() {
-        fetch("http://localhost:8081/clients/logout", {
+        fetch("${windows.location.origin}/clients/logout", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ username })
