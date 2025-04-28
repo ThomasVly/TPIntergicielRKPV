@@ -21,4 +21,4 @@ kubectl apply -f kube/
 kubectl get pods
 
 # Exposer le front pour pouvoir s'y connecter
-minikube service kafka-app-front
+minikube service kafka-app-front get pods
