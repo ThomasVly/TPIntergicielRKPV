@@ -17,6 +17,7 @@ spec:
       containers:
         - name: kafka-app-front
           image: localhost:5000/kafka-app-front
+
           ports:
             - containerPort: 80
 ---
