@@ -113,7 +113,7 @@
         localStorage.setItem("user", JSON.stringify({ username, mode }));
 
         if (mode === "pseudo-anonyme") {
-            fetch("http://kafka-app-backend:8080/clients/get", {
+            fetch("http://kafka-app-backend:8080/clients/get", {        //appel api a verifier le port surtout, et si on l'a nommé pareil sur kube
                 method: "GET",
             })
                 .then(response => {
@@ -132,7 +132,7 @@
                 })
                 .catch(error => console.error("Erreur :", error));
         } else {
-            fetch("http://kafka-app-backend:8080/clients/login", {
+            fetch("http://kafka-app-backend:8080/clients/login", {                //appel api a verifier le port surtout, et si on l'a nommé pareil sur kube
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ username })
