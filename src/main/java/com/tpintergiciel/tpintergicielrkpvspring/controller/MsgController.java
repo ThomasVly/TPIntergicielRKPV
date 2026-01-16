@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@CrossOrigin(origins = "*")  // Autorise toutes les origines
 @RequestMapping("/msg")
 public class MsgController {
     @Autowired

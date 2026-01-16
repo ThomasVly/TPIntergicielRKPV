@@ -184,7 +184,7 @@
     }
 
     function fetchUsers() {
-        fetch("http://localhost:8081/clients/get")
+        fetch("http://localhost:8080/clients/get")
             .then(response => response.json())
             .then(users => {
                 const usersList = document.getElementById("users-list");

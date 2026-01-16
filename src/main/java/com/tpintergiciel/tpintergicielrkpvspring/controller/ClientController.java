@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @RestController
+@CrossOrigin(origins = "*")  // Autorise toutes les origines
 @RequestMapping("/clients")
 public class ClientController {
     @Autowired

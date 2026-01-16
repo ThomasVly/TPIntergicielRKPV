@@ -2,12 +2,10 @@ package com.tpintergiciel.tpintergicielrkpvspring.controller;
 
 import com.tpintergiciel.tpintergicielrkpvspring.kafka.KafkaProducer;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
+@CrossOrigin(origins = "*")  // Autorise toutes les origines
 @RequestMapping("/Kafka")
 public class KafkaController {
 
